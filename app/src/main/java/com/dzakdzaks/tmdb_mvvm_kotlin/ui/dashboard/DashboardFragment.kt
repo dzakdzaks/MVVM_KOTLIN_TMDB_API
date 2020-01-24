@@ -6,14 +6,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dzakdzaks.tmdb_mvvm_kotlin.R
-import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.NowPlayingMovie
+import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.movie.NowPlayingMovie
 import com.dzakdzaks.tmdb_mvvm_kotlin.di.Injection
 import com.dzakdzaks.tmdb_mvvm_kotlin.ui.movie_detail.MovieDetailActivity
 import com.dzakdzaks.tmdb_mvvm_kotlin.viewmodel.MainViewModel

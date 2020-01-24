@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.NowPlayingMovie
+import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.movie.NowPlayingMovie
 
 /**
  * ==================================//==================================

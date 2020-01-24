@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dzakdzaks.tmdb_mvvm_kotlin.BuildConfig
 import com.dzakdzaks.tmdb_mvvm_kotlin.R
-import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.NowPlayingMovie
+import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.movie.NowPlayingMovie
 import com.dzakdzaks.tmdb_mvvm_kotlin.utils.Utils
 
 /**

@@ -2,7 +2,7 @@ package com.dzakdzaks.tmdb_mvvm_kotlin.data.local
 
 import androidx.room.Room
 import com.dzakdzaks.tmdb_mvvm_kotlin.MainApplication
-import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.NowPlayingMovie
+import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.movie.NowPlayingMovie
 
 /**
  * ==================================//==================================

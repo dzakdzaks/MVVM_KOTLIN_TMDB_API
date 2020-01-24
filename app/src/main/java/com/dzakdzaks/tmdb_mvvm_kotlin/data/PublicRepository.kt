@@ -1,15 +1,17 @@
 package com.dzakdzaks.tmdb_mvvm_kotlin.data
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.dzakdzaks.tmdb_mvvm_kotlin.MainApplication
 import com.dzakdzaks.tmdb_mvvm_kotlin.R
 import com.dzakdzaks.tmdb_mvvm_kotlin.callback.OperationCallback
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.local.LocalRepository
-import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.NowPlayingMovie
+import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.movie.NowPlayingMovie
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.movie_detail.ResponseMovieDetail
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.remote.RemoteRepository
 import com.dzakdzaks.tmdb_mvvm_kotlin.utils.Utils
+import com.google.gson.Gson
 
 /**
  * ==================================//==================================
@@ -56,10 +58,21 @@ class PublicRepository constructor(
         return isEmptyList
     }
 
+    private fun getLocalNowPlayingMovies(): List<NowPlayingMovie>? {
+            var list: List<NowPlayingMovie>? = null
+        Thread{
+            Thread.sleep(10)
+            list = localRepository.getNowPlayingMovies()
+        }.start()
+        Thread.sleep(25)
+        return list
+    }
+
     override fun retrieveNowPlayingMovies(): LiveData<List<NowPlayingMovie>> {
         if (!Utils.isConnectedToInternet()) {
 //            Utils.showToast(MainApplication.appContext().resources.getString(R.string.no_internet))
-            _onMessageError.value = MainApplication.appContext().resources.getString(R.string.no_internet)
+//            _onMessageError.value = MainApplication.appContext().resources.getString(R.string.no_internet)
+            _nowPlayingMovies.value = getLocalNowPlayingMovies()
         } else {
             _isViewLoading.value = true
             remoteRepository.retrieveNowPlayingMovies(object : OperationCallback {
@@ -70,6 +83,27 @@ class PublicRepository constructor(
                             _isEmptyList.value = true
                         } else {
                             _nowPlayingMovies.value = obj as List<NowPlayingMovie>
+                            Thread{
+                                Thread.sleep(10)
+                                for (item in obj) {
+                                    val data = NowPlayingMovie()
+                                    data.id = item.id
+                                    data.overview = item.overview
+                                    data.originalLanguage = item.originalLanguage
+                                    data.originalTitle = item.originalTitle
+                                    data.video = item.video
+                                    data.title = item.title
+                                    data.posterPath = item.posterPath
+                                    data.backdropPath = item.backdropPath
+                                    data.releaseDate = item.releaseDate
+                                    data.popularity = item.popularity
+                                    data.voteAverage = item.voteAverage
+                                    data.adult = item.adult
+                                    data.voteCount = item.voteCount
+                                    localRepository.saveNowPlayingMovies(data)
+                                }
+                                Log.d("datalocal", Gson().toJson(localRepository.getNowPlayingMovies()))
+                            }.start()
                         }
                     }
                 }

@@ -1,7 +1,7 @@
 package com.dzakdzaks.tmdb_mvvm_kotlin.data
 
 import androidx.lifecycle.LiveData
-import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.NowPlayingMovie
+import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.movie.NowPlayingMovie
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.movie_detail.ResponseMovieDetail
 
 /**
