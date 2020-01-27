@@ -29,7 +29,6 @@ class DashboardFragment : Fragment() {
     private lateinit var viewModel: MainViewModel
     private lateinit var adapter: DashboardAdapter
 
-    private var counter: Int? = 0
     private var broadcastReceiver: BroadcastReceiver? = null
 
     companion object {
@@ -51,7 +50,8 @@ class DashboardFragment : Fragment() {
     }
 
     private fun setupUI() {
-        adapter = DashboardAdapter(viewModel.initRepo().retrieveNowPlayingMovies().value ?: emptyList())
+        adapter =
+            DashboardAdapter(viewModel.initRepo().retrieveNowPlayingMovies().value ?: emptyList())
 
 //        if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
         recyclerView.layoutManager = LinearLayoutManager(context)
@@ -91,7 +91,7 @@ class DashboardFragment : Fragment() {
         swipeDashboard.isRefreshing = false
 
         adapter.onItemClick = { it ->
-//            Toast.makeText(context, it.title, Toast.LENGTH_SHORT).show()
+            //            Toast.makeText(context, it.title, Toast.LENGTH_SHORT).show()
             val intent = Intent(activity, MovieDetailActivity::class.java)
             intent.putExtra("movieID", it.id)
             activity?.startActivity(intent)
@@ -121,7 +121,9 @@ class DashboardFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.initRepo().retrieveNowPlayingMovies().observe(this, renderMovies)
+//        viewModel.initRepo().retrieveNowPlayingMovies().observe(this, renderMovies)
+        setupViewModel()
+        setupUI()
         startMinuteUpdater()
     }
 
