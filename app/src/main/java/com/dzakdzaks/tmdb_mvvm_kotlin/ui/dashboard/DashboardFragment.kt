@@ -1,11 +1,15 @@
 package com.dzakdzaks.tmdb_mvvm_kotlin.ui.dashboard
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -24,6 +28,9 @@ class DashboardFragment : Fragment() {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var adapter: DashboardAdapter
+
+    private var counter: Int? = 0
+    private var broadcastReceiver: BroadcastReceiver? = null
 
     companion object {
         const val TAG = "CONSOLE"
@@ -115,5 +122,24 @@ class DashboardFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         viewModel.initRepo().retrieveNowPlayingMovies().observe(this, renderMovies)
+        startMinuteUpdater()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        context?.unregisterReceiver(broadcastReceiver)
+    }
+
+    private fun startMinuteUpdater() {
+        var intentFilter = IntentFilter()
+        intentFilter.addAction(Intent.ACTION_TIME_TICK)
+        broadcastReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                setupViewModel()
+                setupUI()
+                Toast.makeText(activity, "updated", Toast.LENGTH_SHORT).show()
+            }
+        }
+        context?.registerReceiver(broadcastReceiver, intentFilter)
     }
 }
