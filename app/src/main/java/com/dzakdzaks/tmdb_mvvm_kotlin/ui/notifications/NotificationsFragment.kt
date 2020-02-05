@@ -65,6 +65,12 @@ class NotificationsFragment : Fragment(), OnclickAdapter {
             resources.getColor(R.color.colorPrimaryDark),
             resources.getColor(android.R.color.darker_gray)
         )
+
+        fabAddBook.setOnClickListener {
+            val b = Bundle()
+            b.putBoolean("isDetail",false)
+            Utils.setShowDialogFragment(activity!!, BookDetailFragment(), b)
+        }
     }
 
     private fun setupViewModel() {
@@ -112,6 +118,7 @@ class NotificationsFragment : Fragment(), OnclickAdapter {
     override fun onItemClick(any: Any) {
         val book = any as Book
         val b = Bundle()
+        b.putBoolean("isDetail",true)
         b.putInt("bookID", book.id!!)
         Utils.setShowDialogFragment(activity!!, BookDetailFragment(), b)
     }

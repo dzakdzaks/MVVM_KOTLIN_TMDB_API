@@ -36,38 +36,54 @@
             android:padding="12dp">
 
             <ImageView
+                android:id="@+id/ic_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:layout_margin="6dp"
+                android:src="@drawable/ic_close_white"
+                android:tint="@android:color/black" />
+
+            <ImageView
                 android:id="@+id/ivPreviewPhoto"
                 android:layout_width="match_parent"
                 android:layout_height="190dp"
-                android:scaleType="centerCrop" />
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_launcher_background" />
 
             <TextView
                 android:id="@+id/tvName"
-                android:layout_marginTop="12dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Name"/>
+                android:layout_marginTop="12dp"
+                android:text="Name" />
 
             <TextView
                 android:id="@+id/tvAuthor"
-                android:layout_marginTop="6dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Author"/>
+                android:layout_marginTop="6dp"
+                android:text="Author" />
 
             <TextView
                 android:id="@+id/tvCreated"
-                android:layout_marginTop="6dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Created"/>
+                android:layout_marginTop="6dp"
+                android:text="Created" />
 
             <TextView
                 android:id="@+id/tvUpdated"
-                android:layout_marginTop="6dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Updated"/>
+                android:layout_marginTop="6dp"
+                android:text="Updated" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -75,12 +91,12 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:text="Back"
                     android:id="@+id/btnBack"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
                     android:layout_marginBottom="6dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:text="Back" />
             </LinearLayout>
 
 

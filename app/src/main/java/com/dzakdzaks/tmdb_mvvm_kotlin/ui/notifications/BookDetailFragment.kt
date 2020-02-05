@@ -1,12 +1,12 @@
 package com.dzakdzaks.tmdb_mvvm_kotlin.ui.notifications
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -17,11 +17,11 @@ import com.dzakdzaks.tmdb_mvvm_kotlin.R
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.book.ResponseUpdateDeleteBook
 import com.dzakdzaks.tmdb_mvvm_kotlin.di.Injection
 import com.dzakdzaks.tmdb_mvvm_kotlin.ui.dashboard.DashboardFragment
+import com.dzakdzaks.tmdb_mvvm_kotlin.ui.photo_view.PhotoPreviewActivity
 import com.dzakdzaks.tmdb_mvvm_kotlin.utils.Utils
 import com.dzakdzaks.tmdb_mvvm_kotlin.viewmodel.MainViewModel
 import com.dzakdzaks.tmdb_mvvm_kotlin.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_book_detail.*
-import kotlinx.android.synthetic.main.fragment_notifications.*
 
 
 /**
@@ -42,14 +42,35 @@ class BookDetailFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val bundle = arguments?.getInt("bookID")
+        val isDetail = arguments?.getBoolean("isDetail")
 
+        viewModel =
+            ViewModelProviders.of(this, ViewModelFactory(Injection.providerRepository()))
+                .get(MainViewModel::class.java)
 
-        viewModel = ViewModelProviders.of(this, ViewModelFactory(Injection.providerRepository()))
-            .get(MainViewModel::class.java)
+        if (isDetail!!) {
 
-        viewModel.initRepo().retrieveBookByID(bundle!!).observe(this, renderDetailBook)
-        viewModel.initRepo().isLoading().observe(this, isViewLoadingObserver)
+            val bundle = arguments?.getInt("bookID")
+
+            viewModel.initRepo().retrieveBookByID(bundle!!).observe(this, renderDetailBook)
+            viewModel.initRepo().isLoading().observe(this, isViewLoadingObserver)
+        } else {
+
+            progressBarNotifDetail.visibility = View.GONE
+            btnBack.text = "Save"
+
+            btnBack.setOnClickListener {
+                //todo save data
+            }
+
+            ivPreviewPhoto.setOnClickListener {
+                //todo choose image from camera or gallery
+            }
+        }
+
+        ic_close.setOnClickListener {
+            dismiss()
+        }
 
     }
 
@@ -71,6 +92,12 @@ class BookDetailFragment : DialogFragment() {
 
         btnBack.setOnClickListener {
             dismiss()
+        }
+
+        ivPreviewPhoto.setOnClickListener {
+            val i = Intent(activity, PhotoPreviewActivity::class.java)
+            i.putExtra("url", imgURL)
+            startActivity(i)
         }
     }
 
