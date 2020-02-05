@@ -19,6 +19,7 @@ import com.dzakdzaks.tmdb_mvvm_kotlin.R
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.movie.NowPlayingMovie
 import com.dzakdzaks.tmdb_mvvm_kotlin.di.Injection
 import com.dzakdzaks.tmdb_mvvm_kotlin.ui.movie_detail.MovieDetailActivity
+import com.dzakdzaks.tmdb_mvvm_kotlin.utils.Utils
 import com.dzakdzaks.tmdb_mvvm_kotlin.viewmodel.MainViewModel
 import com.dzakdzaks.tmdb_mvvm_kotlin.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_dashboard.*
@@ -90,7 +91,7 @@ class DashboardFragment : Fragment() {
         adapter.updateData(it)
         swipeDashboard.isRefreshing = false
 
-        adapter.onItemClick = { it ->
+        adapter.onItemClick = {
             //            Toast.makeText(context, it.title, Toast.LENGTH_SHORT).show()
             val intent = Intent(activity, MovieDetailActivity::class.java)
             intent.putExtra("movieID", it.id)
@@ -122,8 +123,8 @@ class DashboardFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 //        viewModel.initRepo().retrieveNowPlayingMovies().observe(this, renderMovies)
-        setupViewModel()
-        setupUI()
+//        setupViewModel()
+//        setupUI()
         startMinuteUpdater()
     }
 
@@ -137,9 +138,11 @@ class DashboardFragment : Fragment() {
         intentFilter.addAction(Intent.ACTION_TIME_TICK)
         broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
-                setupViewModel()
-                setupUI()
-                Toast.makeText(activity, "updated", Toast.LENGTH_SHORT).show()
+                if (Utils.isConnectedToInternet()) {
+                    setupViewModel()
+                    setupUI()
+                    Toast.makeText(activity, "updated", Toast.LENGTH_SHORT).show()
+                }
             }
         }
         context?.registerReceiver(broadcastReceiver, intentFilter)

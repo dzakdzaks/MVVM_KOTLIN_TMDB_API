@@ -7,6 +7,7 @@ import com.dzakdzaks.tmdb_mvvm_kotlin.MainApplication
 import com.dzakdzaks.tmdb_mvvm_kotlin.R
 import com.dzakdzaks.tmdb_mvvm_kotlin.callback.OperationCallback
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.local.LocalRepository
+import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.book.Book
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.movie.NowPlayingMovie
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.movie_detail.ResponseMovieDetail
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.remote.RemoteRepository
@@ -26,7 +27,7 @@ import com.google.gson.Gson
 class PublicRepository constructor(
     private val localRepository: LocalRepository,
     private val remoteRepository: RemoteRepository
-): PublicDataSource {
+) : PublicDataSource {
 
     /*global function*/
     private val _isViewLoading = MutableLiveData<Boolean>()
@@ -40,11 +41,15 @@ class PublicRepository constructor(
     /*global function*/
 
 
-    private val _nowPlayingMovies = MutableLiveData<List<NowPlayingMovie>>().apply { value = emptyList() }
+    private val _nowPlayingMovies =
+        MutableLiveData<List<NowPlayingMovie>>().apply { value = emptyList() }
     private val nowPlayingMovie: LiveData<List<NowPlayingMovie>> = _nowPlayingMovies
 
     private val _detailMovie = MutableLiveData<ResponseMovieDetail>()
     private val detailMovie: LiveData<ResponseMovieDetail> = _detailMovie
+
+    private val _allBooks = MutableLiveData<List<Book>>().apply { value = emptyList() }
+    private val allBooks: LiveData<List<Book>> = _allBooks
 
     override fun isLoading(): LiveData<Boolean> {
         return isViewLoading
@@ -59,8 +64,8 @@ class PublicRepository constructor(
     }
 
     private fun getLocalNowPlayingMovies(): List<NowPlayingMovie>? {
-            var list: List<NowPlayingMovie>? = null
-        Thread{
+        var list: List<NowPlayingMovie>? = null
+        Thread {
             Thread.sleep(10)
             list = localRepository.getNowPlayingMovies()
         }.start()
@@ -78,12 +83,12 @@ class PublicRepository constructor(
             remoteRepository.retrieveNowPlayingMovies(object : OperationCallback {
                 override fun onSuccess(obj: Any?) {
                     _isViewLoading.value = false
-                    if (obj != null && obj is List<*>){
+                    if (obj != null && obj is List<*>) {
                         if (obj.isEmpty()) {
                             _isEmptyList.value = true
                         } else {
                             _nowPlayingMovies.value = obj as List<NowPlayingMovie>
-                            Thread{
+                            Thread {
                                 Thread.sleep(10)
                                 for (item in obj) {
                                     val data = NowPlayingMovie()
@@ -102,7 +107,10 @@ class PublicRepository constructor(
                                     data.voteCount = item.voteCount
                                     localRepository.saveNowPlayingMovies(data)
                                 }
-                                Log.d("datalocal", Gson().toJson(localRepository.getNowPlayingMovies()))
+                                Log.d(
+                                    "datalocal",
+                                    Gson().toJson(localRepository.getNowPlayingMovies())
+                                )
                             }.start()
                         }
                     }
@@ -120,8 +128,9 @@ class PublicRepository constructor(
 
     override fun retrieveMovieDetail(movieID: Int): LiveData<ResponseMovieDetail> {
         if (!Utils.isConnectedToInternet()) {
-            _onMessageError.value = MainApplication.appContext().resources.getString(R.string.no_internet)
-        } else{
+            _onMessageError.value =
+                MainApplication.appContext().resources.getString(R.string.no_internet)
+        } else {
             _isViewLoading.value = true
             remoteRepository.retrieveMovieDetail(movieID, object : OperationCallback {
                 override fun onSuccess(obj: Any?) {
@@ -142,4 +151,32 @@ class PublicRepository constructor(
         return detailMovie
     }
 
+    override fun retrieveAllBooks(): LiveData<List<Book>> {
+        if (!Utils.isConnectedToInternet()) {
+            _onMessageError.value =
+                MainApplication.appContext().resources.getString(R.string.no_internet)
+        } else {
+            _isViewLoading.value = true
+            remoteRepository.retrieveAllBooks(object : OperationCallback {
+                override fun onSuccess(obj: Any?) {
+                    _isViewLoading.value = false
+
+                    if (obj != null && obj is List<*>) {
+                        if (obj.isEmpty()) {
+                            _isEmptyList.value = true
+                        } else {
+                            _allBooks.value = obj as List<Book>
+                        }
+                    }
+                }
+
+                override fun onError(obj: Any?) {
+                    _isViewLoading.value = false
+                    _onMessageError.value = obj
+                }
+
+            })
+        }
+        return allBooks
+    }
 }

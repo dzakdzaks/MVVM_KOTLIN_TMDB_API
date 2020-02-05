@@ -1,6 +1,8 @@
 package com.dzakdzaks.tmdb_mvvm_kotlin.data
 
 import androidx.lifecycle.LiveData
+import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.book.Book
+import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.book.ResponseBooks
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.movie.NowPlayingMovie
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.movie_detail.ResponseMovieDetail
 
@@ -21,4 +23,5 @@ interface PublicDataSource {
 
     fun retrieveNowPlayingMovies(): LiveData<List<NowPlayingMovie>>
     fun retrieveMovieDetail(movieID: Int): LiveData<ResponseMovieDetail>
+    fun retrieveAllBooks(): LiveData<List<Book>>
 }

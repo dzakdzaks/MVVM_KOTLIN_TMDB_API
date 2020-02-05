@@ -1,11 +1,10 @@
 package com.dzakdzaks.tmdb_mvvm_kotlin.data.remote
 
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.ResponseNowPlayingMovies
+import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.book.ResponseBooks
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.movie_detail.ResponseMovieDetail
 import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 /**
  * ==================================//==================================
@@ -30,4 +29,7 @@ interface ApiInterfaces {
         @Query("api_key") apiKey: String
     ): Call<ResponseMovieDetail>
 
+    @Headers("Accept: application/json")
+    @GET("books")
+    fun getAllBooks(): Call<ResponseBooks>
 }

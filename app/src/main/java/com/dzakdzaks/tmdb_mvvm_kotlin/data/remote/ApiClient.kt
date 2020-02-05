@@ -1,10 +1,13 @@
 package com.dzakdzaks.tmdb_mvvm_kotlin.data.remote
 
 import com.dzakdzaks.tmdb_mvvm_kotlin.BuildConfig
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
 
 /**
  * ==================================//==================================
@@ -19,13 +22,14 @@ import retrofit2.converter.gson.GsonConverterFactory
 object ApiClient {
     private var servicesApiInterface: ApiInterfaces? = null
 
-    fun build(): ApiInterfaces? {
+    fun build(isMovies: Boolean): ApiInterfaces? {
 
         val builder: Retrofit.Builder = Retrofit.Builder()
-            .baseUrl(BuildConfig.BASE_URL)
+            .baseUrl(if (isMovies) BuildConfig.BASE_URL else BuildConfig.BASE_URL_BOOKS)
             .addConverterFactory(GsonConverterFactory.create())
 
         val httpClient: OkHttpClient.Builder = OkHttpClient.Builder()
+            .addNetworkInterceptor(AddHeaderInterceptor())
             .addInterceptor(interceptor())
 
         val retrofit: Retrofit = builder.client(httpClient.build()).build()
@@ -41,6 +45,17 @@ object ApiClient {
         httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
 //            if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
         return httpLoggingInterceptor
+    }
+
+    class AddHeaderInterceptor : Interceptor {
+        @Throws(IOException::class)
+        override fun intercept(chain: Interceptor.Chain): Response {
+
+            val builder = chain.request().newBuilder()
+            builder.addHeader("Authorization", BuildConfig.BEARER)
+
+            return chain.proceed(builder.build())
+        }
     }
 
 }

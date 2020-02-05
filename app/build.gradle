@@ -16,11 +16,15 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        def SERVER_HOST = "http://192.168.1.174"
+        buildConfigField "String", "SERVER_HOST", "\"${SERVER_HOST}\""
+        buildConfigField "String", "BASE_URL_BOOKS", "\"${SERVER_HOST}/crud_laravel/public/api/\""
         buildConfigField "String", "BASE_URL", "\"https://api.themoviedb.org/3/\""
         buildConfigField "String", "API_KEY", "\"a1821872f81f15ac6148ba0e0b625bbd\""
 //        buildConfigField "String", "IMAGE_URL_POSTER ", "\"http://image.tmdb.org/t/p/w185\""
         buildConfigField "String", "IMAGE_URL_BACKDROP ", "\"http://image.tmdb.org/t/p/w780\""
         buildConfigField("String", "IMAGE_URL_POSTER", "\"http://image.tmdb.org/t/p/w200\"")
+        buildConfigField("String", "BEARER", "\"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiZmMyNDhlYjc0Mzk4M2Q3ZWY3NzUxM2QwOGQ2ZTMxMjdkYWQ4NmQ3NzBlNGYxMjk4ZWIzZTlmODUzOTFmYTdmZmFiNzQ5ODVlMjYyMzU1MTMiLCJpYXQiOjE1ODA4MTA1MjEsIm5iZiI6MTU4MDgxMDUyMSwiZXhwIjoxNjEyNDMyOTIxLCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.D5jKs6Pc3zRiTvNT-QinQlzzUyn4PoD7taTEp7tBu9erqotU8lXfqbH0HYvX7Vo19n0O6kNSvtpqDEOLwIrjsXyyu0uP0HNjgUaOj9oVmxHmXJfpouL4zYAAMZ-YsRC4XiTA_cpRlZ0ndn_dSZn9RsCB9M93cMudp2oDtEoes7nlqSCMgIlsOMrrVxITXS0UPVYY_b5i7eet9tHdayJJAcgPg9KHIOhTV0Lr4Eru_jeSFPq1vkw1qvgqsYiIuhWxXILtuPCANuWuZ43hC3sEwXDy-uLnDqnh_JMwpMr8pTuwo7jPzMvo09FcsqTN1NQIedPCQ7S_t-eJHbyI1oPCaYO4iKfLDePy3rg1xS6vGWHPPMA9S8xzeKfiUNDZUcS-Cm6xqsnO0MAbFeqF9--zLpednH2f8ZF3nZTVsw83khsKPL1fLPeNnHV4ZwzJXBMbuQCbLwnBCKbk-fSFrSSLqEk8-DCSY49xskTEWcsQxgL-Pp3-sv8m60DHp0X1UX97RylO_GV6DdFnPrsZHgsImdwn7wy9LR2J4IZsscao1HiNxQpH1iyJxEC_DK0cDfb-rf7cdYp_9EzpXkIWJkavPTS_qwMRUxwJHeqV2yCJevEh50czk005mekqniTiSZwc5LyuPoSotMO9tRvPpOH3dwdc0E08cwlWO7vbN2RR3VQ\"")
 //        buildConfigField("String", "IMAGE_URL_BACKDROP", "\"http://image.tmdb.org/t/p/w500\"")
     }
     buildTypes {

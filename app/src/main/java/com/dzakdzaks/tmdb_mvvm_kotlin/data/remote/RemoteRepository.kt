@@ -4,6 +4,7 @@ import android.util.Log
 import com.dzakdzaks.tmdb_mvvm_kotlin.BuildConfig
 import com.dzakdzaks.tmdb_mvvm_kotlin.callback.OperationCallback
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.ResponseNowPlayingMovies
+import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.book.ResponseBooks
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.movie_detail.ResponseMovieDetail
 import retrofit2.Call
 import retrofit2.Callback
@@ -23,9 +24,10 @@ class RemoteRepository {
 
     private var callNowPlayingMovies: Call<ResponseNowPlayingMovies>? = null
     private var callMovieDetail: Call<ResponseMovieDetail>? = null
+    private var callBooks: Call<ResponseBooks>? = null
 
     fun retrieveNowPlayingMovies(callback: OperationCallback) {
-        callNowPlayingMovies = ApiClient.build()?.getNowPlayingMovies(BuildConfig.API_KEY)
+        callNowPlayingMovies = ApiClient.build(true)?.getNowPlayingMovies(BuildConfig.API_KEY)
         callNowPlayingMovies?.enqueue(object : Callback<ResponseNowPlayingMovies> {
             override fun onFailure(call: Call<ResponseNowPlayingMovies>, t: Throwable) {
                 callback.onError(t.message)
@@ -49,7 +51,7 @@ class RemoteRepository {
     }
 
     fun retrieveMovieDetail(movieID: Int, callback: OperationCallback) {
-        callMovieDetail = ApiClient.build()?.getMovieDetail(movieID, BuildConfig.API_KEY)
+        callMovieDetail = ApiClient.build(true)?.getMovieDetail(movieID, BuildConfig.API_KEY)
         callMovieDetail?.enqueue(object : Callback<ResponseMovieDetail> {
             override fun onFailure(call: Call<ResponseMovieDetail>, t: Throwable) {
                 callback.onError(t.message)
@@ -71,4 +73,24 @@ class RemoteRepository {
         })
     }
 
+    fun retrieveAllBooks(callback: OperationCallback) {
+        callBooks = ApiClient.build(false)?.getAllBooks()
+        callBooks?.enqueue(object : Callback<ResponseBooks> {
+            override fun onFailure(call: Call<ResponseBooks>, t: Throwable) {
+                callback.onError(t.message)
+            }
+
+            override fun onResponse(call: Call<ResponseBooks>, response: Response<ResponseBooks>) {
+                response.body().let {
+                    if (response.isSuccessful) {
+                        Log.d("kambing", "data : ${it?.data}")
+                        callback.onSuccess(it?.data)
+                    } else {
+                        callback.onError("Not Successfully")
+                    }
+                }
+            }
+
+        })
+    }
 }
