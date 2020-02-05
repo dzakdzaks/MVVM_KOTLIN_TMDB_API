@@ -4,9 +4,13 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
+import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentActivity
 import com.dzakdzaks.tmdb_mvvm_kotlin.MainApplication
+import com.dzakdzaks.tmdb_mvvm_kotlin.R
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -43,6 +47,7 @@ class Utils {
             }
             return randalphanum
         }
+
         fun isConnectedToInternet(): Boolean {
             val connectivity = MainApplication.appContext().getSystemService(
                 Context.CONNECTIVITY_SERVICE
@@ -84,6 +89,20 @@ class Utils {
             } else {
                 Log.i(TAG, str) // continuation
             }
+        }
+
+        fun setShowDialogFragment(
+            activity: FragmentActivity,
+            fragment: DialogFragment,
+            bundle: Bundle
+        ) {
+            val transaction = activity.supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.fragment_dialog, fragment)
+            //dissmis the dialog when onbackpressed
+            transaction.addToBackStack(null);
+            fragment.arguments = bundle
+            transaction.commit()
+
         }
     }
 

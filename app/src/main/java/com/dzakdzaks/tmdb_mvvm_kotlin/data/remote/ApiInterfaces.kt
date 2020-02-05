@@ -36,6 +36,12 @@ interface ApiInterfaces {
     fun getAllBooks(): Call<ResponseBooks>
 
     @Headers("Accept: application/json")
+    @GET("books/{id}")
+    fun getBookByID(
+        @Path("id") id: Int
+    ): Call<ResponseUpdateDeleteBook.ResponseUpdateDelete>
+
+    @Headers("Accept: application/json")
     @PUT("books/{id}")
     fun updateBook(
         @Path("id") id: Int,

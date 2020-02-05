@@ -236,4 +236,28 @@ class PublicRepository constructor(
         }
         return updateBookMsg
     }
+
+    override fun retrieveBookByID(id: Int): LiveData<ResponseUpdateDeleteBook.ResponseUpdateDelete> {
+        if (!Utils.isConnectedToInternet()) {
+            _onMessageError.value =
+                MainApplication.appContext().resources.getString(R.string.no_internet)
+        } else {
+            _isViewLoading.value = true
+            remoteRepository.retrieveBookByID(id, object : OperationCallback {
+                override fun onSuccess(obj: Any?) {
+                    _isViewLoading.value = false
+                    if (obj != null) {
+                        _updateBookMsg.value = obj as ResponseUpdateDeleteBook.ResponseUpdateDelete
+                    }
+                }
+
+                override fun onError(obj: Any?) {
+                    _isViewLoading.value = false
+                    _onMessageError.value = obj
+                }
+
+            })
+        }
+        return updateBookMsg
+    }
 }

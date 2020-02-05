@@ -27,6 +27,7 @@ interface PublicDataSource {
     fun retrieveMovieDetail(movieID: Int): LiveData<ResponseMovieDetail>
 
     fun retrieveAllBooks(): LiveData<List<Book>>
+    fun retrieveBookByID(id: Int): LiveData<ResponseUpdateDeleteBook.ResponseUpdateDelete>
     fun bookUpdate(id: Int, requestBookUpdate: RequestBookUpdate): LiveData<ResponseUpdateDeleteBook.ResponseUpdateDelete>
     fun bookDelete(id: Int): LiveData<ResponseUpdateDeleteBook.ResponseUpdateDelete>
 }

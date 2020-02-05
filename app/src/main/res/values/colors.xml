@@ -13,4 +13,5 @@
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#000000</color>
     <color name="colorPrimaryText">#1e1e1e</color>
+    <color name="colorBackgroundTransparent">#9A3C3C3C</color>
 </resources>

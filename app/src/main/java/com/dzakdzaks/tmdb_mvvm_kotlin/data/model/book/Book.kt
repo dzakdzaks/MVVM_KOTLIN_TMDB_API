@@ -1,7 +1,11 @@
 package com.dzakdzaks.tmdb_mvvm_kotlin.data.model.book
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
+import java.io.Serializable
 
+@Parcelize
 data class Book(
 
 	@SerializedName("image")
@@ -21,4 +25,4 @@ data class Book(
 
 	@SerializedName("id")
 	var id: Int? = null
-)
+) : Parcelable
