@@ -84,6 +84,7 @@ class NotificationsFragment : Fragment(), OnclickAdapter {
         Log.v(DashboardFragment.TAG, "data updated $it")
         layoutErrorNotif.visibility = View.GONE
         layoutEmptyNotif.visibility = View.GONE
+        recyclerViewNotif.visibility = View.VISIBLE
         adapter.updateData(it)
         swipeDashboardNotif.isRefreshing = false
     }
@@ -107,6 +108,7 @@ class NotificationsFragment : Fragment(), OnclickAdapter {
         Log.v(DashboardFragment.TAG, "emptyListObserver $it")
         layoutErrorNotif.visibility = View.GONE
         layoutEmptyNotif.visibility = View.VISIBLE
+        recyclerViewNotif.visibility = View.GONE
     }
 
     override fun onItemClick(any: Any) {
@@ -140,13 +142,16 @@ class NotificationsFragment : Fragment(), OnclickAdapter {
     }
 
     private fun deleteData(book: Book) {
-
+        viewModel.initRepo().bookDelete(book.id!!).observe(this, renderMoviesDelete)
     }
 
     private val renderMoviesUpdate = Observer<ResponseUpdateDeleteBook.ResponseUpdateDelete> {
-//        Log.v(DashboardFragment.TAG, "data updated {${it.message}}")
         Utils.showToastMessage(it.message.toString())
         viewModel.initRepo().retrieveAllBooks().observe(this, renderMovies)
-//        Utils.showToastMessage("success edit")
+    }
+
+    private val renderMoviesDelete = Observer<ResponseUpdateDeleteBook.ResponseUpdateDelete> {
+        Utils.showToastMessage(it.message.toString())
+        viewModel.initRepo().retrieveAllBooks().observe(this, renderMovies)
     }
 }

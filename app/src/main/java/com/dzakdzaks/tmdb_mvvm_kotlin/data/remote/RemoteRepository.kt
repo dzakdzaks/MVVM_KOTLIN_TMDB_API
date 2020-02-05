@@ -117,4 +117,25 @@ class RemoteRepository {
 
         })
     }
+
+    fun bookDelete(id: Int, callback: OperationCallback) {
+        callUpdateDeleteBooks = ApiClient.build(false)?.deleteBook(id)
+        callUpdateDeleteBooks?.enqueue(object : Callback<ResponseUpdateDeleteBook.ResponseUpdateDelete> {
+            override fun onFailure(call: Call<ResponseUpdateDeleteBook.ResponseUpdateDelete>, t: Throwable) {
+                callback.onError(t.message)
+            }
+
+            override fun onResponse(call: Call<ResponseUpdateDeleteBook.ResponseUpdateDelete>, response: Response<ResponseUpdateDeleteBook.ResponseUpdateDelete>) {
+                response.body().let {
+                    if (response.isSuccessful) {
+                        Log.d("kambing", "data : $it")
+                        callback.onSuccess(it)
+                    } else {
+                        callback.onError("Not Successfully")
+                    }
+                }
+            }
+
+        })
+    }
 }

@@ -42,5 +42,10 @@ interface ApiInterfaces {
         @Body body: RequestBookUpdate
     ): Call<ResponseUpdateDeleteBook.ResponseUpdateDelete>
 
+    @Headers("Accept: application/json")
+    @DELETE("books/{id}")
+    fun deleteBook(
+        @Path("id") id: Int
+    ): Call<ResponseUpdateDeleteBook.ResponseUpdateDelete>
 
 }

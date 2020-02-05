@@ -28,4 +28,5 @@ interface PublicDataSource {
 
     fun retrieveAllBooks(): LiveData<List<Book>>
     fun bookUpdate(id: Int, requestBookUpdate: RequestBookUpdate): LiveData<ResponseUpdateDeleteBook.ResponseUpdateDelete>
+    fun bookDelete(id: Int): LiveData<ResponseUpdateDeleteBook.ResponseUpdateDelete>
 }
