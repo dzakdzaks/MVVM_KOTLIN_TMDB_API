@@ -4,7 +4,9 @@ import android.util.Log
 import com.dzakdzaks.tmdb_mvvm_kotlin.BuildConfig
 import com.dzakdzaks.tmdb_mvvm_kotlin.callback.OperationCallback
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.ResponseNowPlayingMovies
+import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.book.RequestBookUpdate
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.book.ResponseBooks
+import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.book.ResponseUpdateDeleteBook
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.movie_detail.ResponseMovieDetail
 import retrofit2.Call
 import retrofit2.Callback
@@ -25,6 +27,7 @@ class RemoteRepository {
     private var callNowPlayingMovies: Call<ResponseNowPlayingMovies>? = null
     private var callMovieDetail: Call<ResponseMovieDetail>? = null
     private var callBooks: Call<ResponseBooks>? = null
+    private var callUpdateDeleteBooks: Call<ResponseUpdateDeleteBook.ResponseUpdateDelete>? = null
 
     fun retrieveNowPlayingMovies(callback: OperationCallback) {
         callNowPlayingMovies = ApiClient.build(true)?.getNowPlayingMovies(BuildConfig.API_KEY)
@@ -85,6 +88,27 @@ class RemoteRepository {
                     if (response.isSuccessful) {
                         Log.d("kambing", "data : ${it?.data}")
                         callback.onSuccess(it?.data)
+                    } else {
+                        callback.onError("Not Successfully")
+                    }
+                }
+            }
+
+        })
+    }
+
+    fun bookUpdate(id: Int, requestBookUpdate: RequestBookUpdate, callback: OperationCallback) {
+        callUpdateDeleteBooks = ApiClient.build(false)?.updateBook(id, requestBookUpdate)
+        callUpdateDeleteBooks?.enqueue(object : Callback<ResponseUpdateDeleteBook.ResponseUpdateDelete> {
+            override fun onFailure(call: Call<ResponseUpdateDeleteBook.ResponseUpdateDelete>, t: Throwable) {
+                callback.onError(t.message)
+            }
+
+            override fun onResponse(call: Call<ResponseUpdateDeleteBook.ResponseUpdateDelete>, response: Response<ResponseUpdateDeleteBook.ResponseUpdateDelete>) {
+                response.body().let {
+                    if (response.isSuccessful) {
+                        Log.d("kambing", "data : $it")
+                        callback.onSuccess(it)
                     } else {
                         callback.onError("Not Successfully")
                     }

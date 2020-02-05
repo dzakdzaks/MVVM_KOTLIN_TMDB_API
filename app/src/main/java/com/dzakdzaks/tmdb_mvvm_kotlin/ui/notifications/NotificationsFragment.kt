@@ -15,8 +15,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dzakdzaks.tmdb_mvvm_kotlin.R
 import com.dzakdzaks.tmdb_mvvm_kotlin.callback.OnclickAdapter
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.book.Book
+import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.book.RequestBookUpdate
+import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.book.ResponseBooks
+import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.book.ResponseUpdateDeleteBook
 import com.dzakdzaks.tmdb_mvvm_kotlin.di.Injection
 import com.dzakdzaks.tmdb_mvvm_kotlin.ui.dashboard.DashboardFragment
+import com.dzakdzaks.tmdb_mvvm_kotlin.utils.Utils
 import com.dzakdzaks.tmdb_mvvm_kotlin.viewmodel.MainViewModel
 import com.dzakdzaks.tmdb_mvvm_kotlin.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_notifications.*
@@ -112,17 +116,37 @@ class NotificationsFragment : Fragment(), OnclickAdapter {
 
     override fun onItemLongClick(any: Any, view: View) {
         val book = any as Book
-        val popupMenu: PopupMenu = PopupMenu(activity, view)
+        val popupMenu = PopupMenu(activity, view)
         popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
         popupMenu.setOnMenuItemClickListener {
-            when(it.itemId) {
+            when (it.itemId) {
                 R.id.actionEdit ->
-                    Toast.makeText(activity, "You edit : " + book.name, Toast.LENGTH_SHORT).show()
+                    editData(book)
+//                    Toast.makeText(activity, "You edit : " + book.name, Toast.LENGTH_SHORT).show()
                 R.id.actionDelete ->
-                    Toast.makeText(activity, "You delete : " + book.name, Toast.LENGTH_SHORT).show()
+                    deleteData(book)
+//                    Toast.makeText(activity, "You delete : " + book.name, Toast.LENGTH_SHORT).show()
             }
             true
         }
         popupMenu.show()
+    }
+
+    private fun editData(book: Book) {
+        val requestBookUpdate = RequestBookUpdate()
+        requestBookUpdate.name = Utils.randomAlphanum(10)
+        requestBookUpdate.author = Utils.randomAlphanum(10)
+        viewModel.initRepo().bookUpdate(book.id!!, requestBookUpdate).observe(this, renderMoviesUpdate)
+    }
+
+    private fun deleteData(book: Book) {
+
+    }
+
+    private val renderMoviesUpdate = Observer<ResponseUpdateDeleteBook.ResponseUpdateDelete> {
+//        Log.v(DashboardFragment.TAG, "data updated {${it.message}}")
+        Utils.showToastMessage(it.message.toString())
+        viewModel.initRepo().retrieveAllBooks().observe(this, renderMovies)
+//        Utils.showToastMessage("success edit")
     }
 }

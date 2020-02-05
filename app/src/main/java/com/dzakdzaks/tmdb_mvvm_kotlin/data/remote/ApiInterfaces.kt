@@ -1,7 +1,9 @@
 package com.dzakdzaks.tmdb_mvvm_kotlin.data.remote
 
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.ResponseNowPlayingMovies
+import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.book.RequestBookUpdate
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.book.ResponseBooks
+import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.book.ResponseUpdateDeleteBook
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.movie_detail.ResponseMovieDetail
 import retrofit2.Call
 import retrofit2.http.*
@@ -32,4 +34,13 @@ interface ApiInterfaces {
     @Headers("Accept: application/json")
     @GET("books")
     fun getAllBooks(): Call<ResponseBooks>
+
+    @Headers("Accept: application/json")
+    @PUT("books/{id}")
+    fun updateBook(
+        @Path("id") id: Int,
+        @Body body: RequestBookUpdate
+    ): Call<ResponseUpdateDeleteBook.ResponseUpdateDelete>
+
+
 }

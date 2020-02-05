@@ -24,6 +24,25 @@ import java.util.*
 class Utils {
 
     companion object {
+
+        fun randomAlphanum(length: Int): String {
+            val charstring = "abcdefghijklmnopqrstuvwxyz0123456789"
+            var randalphanum = ""
+            var randroll: Double
+            var randchar: String
+            for (i in 0 until length) {
+                randroll = Math.random()
+                randchar = ""
+                for (j in 1..35) {
+                    if (randroll <= 1.0 / 36.0 * j) {
+                        randchar = Character.toString(charstring[j - 1])
+                        break
+                    }
+                }
+                randalphanum += randchar
+            }
+            return randalphanum
+        }
         fun isConnectedToInternet(): Boolean {
             val connectivity = MainApplication.appContext().getSystemService(
                 Context.CONNECTIVITY_SERVICE

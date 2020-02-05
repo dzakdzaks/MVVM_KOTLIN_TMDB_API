@@ -8,6 +8,9 @@ import com.dzakdzaks.tmdb_mvvm_kotlin.R
 import com.dzakdzaks.tmdb_mvvm_kotlin.callback.OperationCallback
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.local.LocalRepository
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.book.Book
+import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.book.RequestBookUpdate
+import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.book.ResponseBooks
+import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.book.ResponseUpdateDeleteBook
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.movie.NowPlayingMovie
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.movie_detail.ResponseMovieDetail
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.remote.RemoteRepository
@@ -50,6 +53,9 @@ class PublicRepository constructor(
 
     private val _allBooks = MutableLiveData<List<Book>>().apply { value = emptyList() }
     private val allBooks: LiveData<List<Book>> = _allBooks
+
+    private val _updateBookMsg = MutableLiveData<ResponseUpdateDeleteBook.ResponseUpdateDelete>()
+    private val updateBookMsg: LiveData<ResponseUpdateDeleteBook.ResponseUpdateDelete> = _updateBookMsg
 
     override fun isLoading(): LiveData<Boolean> {
         return isViewLoading
@@ -178,5 +184,29 @@ class PublicRepository constructor(
             })
         }
         return allBooks
+    }
+
+    override fun bookUpdate(id: Int, requestBookUpdate: RequestBookUpdate): LiveData<ResponseUpdateDeleteBook.ResponseUpdateDelete> {
+        if (!Utils.isConnectedToInternet()) {
+            _onMessageError.value =
+                MainApplication.appContext().resources.getString(R.string.no_internet)
+        } else {
+            _isViewLoading.value = true
+            remoteRepository.bookUpdate(id, requestBookUpdate, object : OperationCallback {
+                override fun onSuccess(obj: Any?) {
+                    _isViewLoading.value = false
+                    if (obj != null) {
+                        _updateBookMsg.value = obj as ResponseUpdateDeleteBook.ResponseUpdateDelete
+                    }
+                }
+
+                override fun onError(obj: Any?) {
+                    _isViewLoading.value = false
+                    _onMessageError.value = obj
+                }
+
+            })
+        }
+        return updateBookMsg
     }
 }
