@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -24,7 +25,7 @@ import com.dzakdzaks.tmdb_mvvm_kotlin.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_notifications.*
 import kotlinx.android.synthetic.main.layout_error.*
 
-class NotificationsFragment : Fragment(), OnclickAdapter {
+class NotificationsFragment : Fragment(), OnclickAdapter, BookDetailFragment.OnAddSuccessListener {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var adapter: NotificationAdapter
@@ -69,7 +70,7 @@ class NotificationsFragment : Fragment(), OnclickAdapter {
         fabAddBook.setOnClickListener {
             val b = Bundle()
             b.putBoolean("isDetail",false)
-            Utils.setShowDialogFragment(activity!!, BookDetailFragment(), b)
+            Utils.setShowDialogFragment(activity!!, BookDetailFragment(this), b)
         }
     }
 
@@ -106,6 +107,7 @@ class NotificationsFragment : Fragment(), OnclickAdapter {
         layoutErrorNotif.visibility = View.VISIBLE
         layoutEmptyNotif.visibility = View.GONE
         textViewError.text = "Error ($it)"
+        swipeDashboardNotif.isRefreshing = false
     }
 
     private val isEmptyListObserver = Observer<Boolean> {
@@ -113,6 +115,7 @@ class NotificationsFragment : Fragment(), OnclickAdapter {
         layoutErrorNotif.visibility = View.GONE
         layoutEmptyNotif.visibility = View.VISIBLE
         recyclerViewNotif.visibility = View.GONE
+        swipeDashboardNotif.isRefreshing = false
     }
 
     override fun onItemClick(any: Any) {
@@ -120,7 +123,7 @@ class NotificationsFragment : Fragment(), OnclickAdapter {
         val b = Bundle()
         b.putBoolean("isDetail",true)
         b.putInt("bookID", book.id!!)
-        Utils.setShowDialogFragment(activity!!, BookDetailFragment(), b)
+        Utils.setShowDialogFragment(activity!!, BookDetailFragment(this), b)
     }
 
     override fun onItemLongClick(any: Any, view: View) {
@@ -158,6 +161,11 @@ class NotificationsFragment : Fragment(), OnclickAdapter {
 
     private val renderMoviesDelete = Observer<ResponseUpdateDeleteBook.ResponseUpdateDelete> {
         Utils.showToastMessage(it.message.toString())
+        viewModel.initRepo().retrieveAllBooks().observe(this, renderMovies)
+    }
+
+    override fun onSuccessAdd(dialogFragment: DialogFragment) {
+        dialogFragment.dismiss()
         viewModel.initRepo().retrieveAllBooks().observe(this, renderMovies)
     }
 }

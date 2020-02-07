@@ -5,6 +5,8 @@ import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.book.RequestBookUpdate
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.book.ResponseBooks
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.book.ResponseUpdateDeleteBook
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.movie_detail.ResponseMovieDetail
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -30,6 +32,15 @@ interface ApiInterfaces {
         @Path("movie_id") movieID: Int,
         @Query("api_key") apiKey: String
     ): Call<ResponseMovieDetail>
+
+    @Headers("Accept: application/json")
+    @Multipart
+    @POST("books")
+    fun storeBook(
+        @Part("name") name: RequestBody,
+        @Part("author") author: RequestBody,
+        @Part image: MultipartBody.Part
+    ): Call<ResponseUpdateDeleteBook.ResponseUpdateDelete>
 
     @Headers("Accept: application/json")
     @GET("books")

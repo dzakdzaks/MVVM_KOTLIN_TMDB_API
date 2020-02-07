@@ -7,6 +7,8 @@ import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.book.ResponseBooks
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.book.ResponseUpdateDeleteBook
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.movie.NowPlayingMovie
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.movie_detail.ResponseMovieDetail
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 /**
  * ==================================//==================================
@@ -26,6 +28,7 @@ interface PublicDataSource {
     fun retrieveNowPlayingMovies(): LiveData<List<NowPlayingMovie>>
     fun retrieveMovieDetail(movieID: Int): LiveData<ResponseMovieDetail>
 
+    fun storeABook(name: RequestBody, author: RequestBody, image: MultipartBody.Part): LiveData<ResponseUpdateDeleteBook.ResponseUpdateDelete>
     fun retrieveAllBooks(): LiveData<List<Book>>
     fun retrieveBookByID(id: Int): LiveData<ResponseUpdateDeleteBook.ResponseUpdateDelete>
     fun bookUpdate(id: Int, requestBookUpdate: RequestBookUpdate): LiveData<ResponseUpdateDeleteBook.ResponseUpdateDelete>

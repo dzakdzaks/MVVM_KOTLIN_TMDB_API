@@ -19,6 +19,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         def SERVER_HOST = "http://192.168.1.174"
+//        def SERVER_HOST = "https://insurrectional-ener.000webhostapp.com"
         buildConfigField "String", "SERVER_HOST", "\"${SERVER_HOST}\""
         buildConfigField "String", "BASE_URL_BOOKS", "\"${SERVER_HOST}/crud_laravel/public/api/\""
         buildConfigField "String", "BASE_URL", "\"https://api.themoviedb.org/3/\""

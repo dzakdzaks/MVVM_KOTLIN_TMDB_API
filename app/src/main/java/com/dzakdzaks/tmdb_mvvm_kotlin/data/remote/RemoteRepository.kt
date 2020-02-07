@@ -8,6 +8,8 @@ import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.book.RequestBookUpdate
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.book.ResponseBooks
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.book.ResponseUpdateDeleteBook
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.movie_detail.ResponseMovieDetail
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -66,6 +68,39 @@ class RemoteRepository {
             ) {
                 response.body().let {
                     if (response.isSuccessful) {
+                        callback.onSuccess(it)
+                    } else {
+                        callback.onError("Not Successfully")
+                    }
+                }
+            }
+
+        })
+    }
+
+    fun storeABook(
+        name: RequestBody,
+        author: RequestBody,
+        image: MultipartBody.Part,
+        callback: OperationCallback
+    ) {
+        callUpdateDeleteBooks = ApiClient.build(false)?.storeBook(name, author, image)
+        callUpdateDeleteBooks?.enqueue(object :
+            Callback<ResponseUpdateDeleteBook.ResponseUpdateDelete> {
+            override fun onFailure(
+                call: Call<ResponseUpdateDeleteBook.ResponseUpdateDelete>,
+                t: Throwable
+            ) {
+                callback.onError(t.message)
+            }
+
+            override fun onResponse(
+                call: Call<ResponseUpdateDeleteBook.ResponseUpdateDelete>,
+                response: Response<ResponseUpdateDeleteBook.ResponseUpdateDelete>
+            ) {
+                response.body().let {
+                    if (response.isSuccessful) {
+                        Log.d("kambing", "data : $it")
                         callback.onSuccess(it)
                     } else {
                         callback.onError("Not Successfully")

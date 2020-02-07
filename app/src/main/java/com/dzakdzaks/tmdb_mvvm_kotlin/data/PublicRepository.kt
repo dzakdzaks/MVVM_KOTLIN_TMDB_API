@@ -15,6 +15,8 @@ import com.dzakdzaks.tmdb_mvvm_kotlin.data.model.movie_detail.ResponseMovieDetai
 import com.dzakdzaks.tmdb_mvvm_kotlin.data.remote.RemoteRepository
 import com.dzakdzaks.tmdb_mvvm_kotlin.utils.Utils
 import com.google.gson.Gson
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 /**
  * ==================================//==================================
@@ -157,6 +159,34 @@ class PublicRepository constructor(
         return detailMovie
     }
 
+    override fun storeABook(
+        name: RequestBody,
+        author: RequestBody,
+        image: MultipartBody.Part
+    ): LiveData<ResponseUpdateDeleteBook.ResponseUpdateDelete> {
+        if (!Utils.isConnectedToInternet()) {
+            _onMessageError.value =
+                MainApplication.appContext().resources.getString(R.string.no_internet)
+        } else {
+            _isViewLoading.value = true
+            remoteRepository.storeABook(name, author, image, object : OperationCallback {
+                override fun onSuccess(obj: Any?) {
+                    _isViewLoading.value = false
+                    if (obj != null) {
+                        _updateBookMsg.value = obj as ResponseUpdateDeleteBook.ResponseUpdateDelete
+                    }
+                }
+
+                override fun onError(obj: Any?) {
+                    _isViewLoading.value = false
+                    _onMessageError.value = obj
+                }
+
+            })
+        }
+        return updateBookMsg
+    }
+
     override fun retrieveAllBooks(): LiveData<List<Book>> {
         if (!Utils.isConnectedToInternet()) {
             _onMessageError.value =
@@ -184,6 +214,30 @@ class PublicRepository constructor(
             })
         }
         return allBooks
+    }
+
+    override fun retrieveBookByID(id: Int): LiveData<ResponseUpdateDeleteBook.ResponseUpdateDelete> {
+        if (!Utils.isConnectedToInternet()) {
+            _onMessageError.value =
+                MainApplication.appContext().resources.getString(R.string.no_internet)
+        } else {
+            _isViewLoading.value = true
+            remoteRepository.retrieveBookByID(id, object : OperationCallback {
+                override fun onSuccess(obj: Any?) {
+                    _isViewLoading.value = false
+                    if (obj != null) {
+                        _updateBookMsg.value = obj as ResponseUpdateDeleteBook.ResponseUpdateDelete
+                    }
+                }
+
+                override fun onError(obj: Any?) {
+                    _isViewLoading.value = false
+                    _onMessageError.value = obj
+                }
+
+            })
+        }
+        return updateBookMsg
     }
 
     override fun bookUpdate(
@@ -237,27 +291,4 @@ class PublicRepository constructor(
         return updateBookMsg
     }
 
-    override fun retrieveBookByID(id: Int): LiveData<ResponseUpdateDeleteBook.ResponseUpdateDelete> {
-        if (!Utils.isConnectedToInternet()) {
-            _onMessageError.value =
-                MainApplication.appContext().resources.getString(R.string.no_internet)
-        } else {
-            _isViewLoading.value = true
-            remoteRepository.retrieveBookByID(id, object : OperationCallback {
-                override fun onSuccess(obj: Any?) {
-                    _isViewLoading.value = false
-                    if (obj != null) {
-                        _updateBookMsg.value = obj as ResponseUpdateDeleteBook.ResponseUpdateDelete
-                    }
-                }
-
-                override fun onError(obj: Any?) {
-                    _isViewLoading.value = false
-                    _onMessageError.value = obj
-                }
-
-            })
-        }
-        return updateBookMsg
-    }
 }
